@@ -28,7 +28,7 @@ curl -sSL https://bootstrap.pypa.io/get-pip.py | python - pip==8.1.1
 adduser -D -s /bin/bash registry
 
 # add the docker registry source from github
-git clone -b deis-v1-lts --single-branch https://github.com/deis/docker-registry /docker-registry && \
+git clone -b deis-v1-lts --single-branch https://github.com/hkloudou/docker-registry /docker-registry && \
   chown -R registry:registry /docker-registry
 
 # install boto configuration

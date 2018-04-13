@@ -11,8 +11,21 @@ git:
 	-git tag -f 0.1.0
 	-git push origin master -f --tags
 build: check-docker
+	#build confd
+	#hkloudou/gobuilder:alpine3.7-go1.10.1
+	@docker run --rm --privileged=true -w /go/src/code/ hkloudou/gobuilder:alpine3.7-go1.10.1 go version
+	@docker run --rm --privileged=true -v $(GOPATH)/src/:/go/src/ -v $(PWD)/rootfs/usr/local/bin/:/go/bin/ -w /code/ hkloudou/gobuilder:alpine3.7-go1.10.1 go build -ldflags "-X main.GitSHA=${GIT_SHA}" -o /go/bin/confd github.com/hkloudou/confd
+	
+	@docker run --rm --privileged=true -v $(GOPATH)/src/:/go/src/ -v $(PWD)/rootfs/usr/local/bin/:/go/bin/ -w /code/ hkloudou/gobuilder:alpine3.7-go1.10.1 go build -ldflags "-X main.GitSHA=${GIT_SHA}" -o /go/bin/etcdctl github.com/hkloudou/etcd/etcdctl
+	
+	
+	
+
 	docker build -t $(IMAGE) .
 
+	#rm rootfs/bin/boot
+	rm rootfs/usr/local/bin/confd
+	rm rootfs/usr/local/bin/etcdctl
 clean: check-docker check-registry
 	docker rmi $(IMAGE)
 
